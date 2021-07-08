@@ -1,12 +1,13 @@
 
-from wsgiref.simple_server import make_server
+from werkzeug.wrappers import Response, Request
+from werkzeug.serving import run_simple
+
 
 def application(environ, start_response):
-    start_response('200 OK', [('Content-Type', 'text/html')])
-    return ["Hola Mundo"]
+    request = Request(environ)
+    response = Response("Hola Mundo", mimetype="text/plain")
+    return response(environ, start_response)
 
-
-httpd = make_server(host='127.0.0.1', port=8080, app=application)
-print("Serving on http://127.0.0.1:8080, press Ctrl+C to exit")
-httpd.serve_forever()
+if __name__ == "__main__":
+    run_simple('127.0.0.1', 8080, application, use_debugger=True, use_reloader=True)
 
